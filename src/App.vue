@@ -1,13 +1,19 @@
 <template>
   <div>
-    <router-view/>
+   <MyHeader/>
+   <router-view/>
+    <MyFooter/>
   </div>
 </template>
 
 <script>
+import './assets/css/base.css'
+import './assets/css/animate.css'
+import MyHeader from './components/MyHeader.vue';
+import MyFooter from './components/MyFooter.vue'
   export default {
-    
-  }
+    components: { MyHeader, MyFooter }
+}
 </script>
 
 <style lang="scss" scoped>
