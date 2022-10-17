@@ -1,154 +1,90 @@
 <template>
-  <div>
+  <div v-if="data">
     <!-- banner部分-->
-    <div class="ck-slide">
-      <ul class="ck-slide-wrapper">
-        <li style="left: 50%; margin: 180px 0 0 -19px">
-          <img src="https://web.codeboy.com/xuezi/img/loading.gif" />
-        </li>
-      </ul>
-      <a href="javascript:;" class="ctrl-slide ck-prev">上一张</a>
-      <a href="javascript:;" class="ctrl-slide ck-next">下一张</a>
-      <div class="ck-slidebox">
-        <div class="slideWrap">
-          <ul class="dot-wrap"></ul>
-        </div>
-      </div>
-    </div>
+    <swiper
+      ref="mySwiper"
+      @mouseover.native.capture="stopSwiper"
+      @mouseout.native="startSwiper"
+      :options="swiperOption"
+    >
+      <swiper-slide v-for="item in data.carouselItems" :key="item.id">
+        <img :src="`${baseUrl + item.img}`" alt="" />
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination"></div>
+      <div class="swiper-button-prev" slot="button-prev"></div>
+      <div class="swiper-button-next" slot="button-next"></div>
+    </swiper>
     <!--/*楼梯1f*/-->
-    <div class="floor" id="f1">
-      <div class="floor_top">
-        <img
-          src="https://web.codeboy.com/xuezi/img/index/computer_icon.png"
-          alt=""
-        />
-        首页推荐 /1F
-      </div>
-      <div class="floor_content">
-        <img
-          src="https://web.codeboy.com/xuezi/img/loading.gif"
-          class="loading"
-        />
-      </div>
-    </div>
+    <IndexFloor title="首页推荐 /1F" :items="data.recommendedItems" />
 
     <!--楼梯2f-->
-    <div class="floor" id="f2">
-      <div class="floor_top">
-        <img
-          src="https://web.codeboy.com/xuezi/img/index/computer_icon.png"
-          alt=""
-        />
-        最新上架 /2F
-      </div>
-      <div class="floor_content">
-        <img
-          src="https://web.codeboy.com/xuezi/img/loading.gif"
-          class="loading"
-        />
-      </div>
-    </div>
+    <IndexFloor title="最新上架 /2F" :items="data.newArrivalItems" />
 
     <!--楼梯3f-->
-    <div class="floor" id="f3">
-      <div class="floor_top">
-        <img
-          src="https://web.codeboy.com/xuezi/img/index/computer_icon.png"
-          alt=""
-        />
-        热销单品 /3F
-      </div>
-      <div class="floor_content">
-        <div class="food">
-          <div class="desc">
-            <p class="name">灵越 燃7000系列</p>
-            <p class="details">
-              酷睿双核i5处理器|256GB SSD| 8GB内存<br />英特尔HD显卡620含共享显卡内存
-            </p>
-            <p class="price">￥4999.00</p>
-            <div id="one" class="view">查看详情</div>
-          </div>
-          <img
-            src="https://web.codeboy.com/xuezi/img/index/study_computer_img1.png"
-            alt=""
-          />
-        </div>
-        <div class="food">
-          <div class="desc">
-            <p class="name">颜值 框不住</p>
-            <p class="details">
-              酷睿双核i5处理器|256GB SSD| 8GB内存<br />英特尔HD显卡620含共享显卡内存
-            </p>
-            <p class="price">￥6888.00</p>
-            <div id="two" class="view">查看详情</div>
-          </div>
-          <img
-            src="https://web.codeboy.com/xuezi/img/index/study_computer_img2.png"
-          />
-        </div>
-        <div class="food">
-          <div class="desc">
-            <p class="name">戴尔XPS13 13.3英寸<br />微边框笔记本</p>
-            <p class="price">￥4600.00</p>
-            <div id="three" class="view">查看详情</div>
-          </div>
-          <img
-            src="https://web.codeboy.com/xuezi/img/index/study_computer_img3.png"
-            alt=""
-          />
-        </div>
-        <div class="product">
-          <img
-            src="https://web.codeboy.com/xuezi/img/index/study_computer_img3.png"
-            alt=""
-          />
-          <h2>戴尔(DELL)XPS13-9360-R1609 13.3英寸微边框笔记本电脑</h2>
-          <p>￥4600.00</p>
-          <a href="product_details.html" id="four">查看详情</a>
-        </div>
-        <div class="product">
-          <img
-            src="https://web.codeboy.com/xuezi/img/index/study_computer_img3.png"
-            alt=""
-          />
-          <h2>戴尔(DELL)XPS13-9360-R1609 13.3英寸微边框笔记本电脑</h2>
-          <p>￥4600.00</p>
-          <a href="product_details.html" id="five">查看详情</a>
-        </div>
-        <div class="product">
-          <img
-            src="https://web.codeboy.com/xuezi/img/index/study_computer_img3.png"
-            alt=""
-          />
-          <h2>戴尔(DELL)XPS13-9360-R1609 13.3英寸微边框笔记本电脑</h2>
-          <p>￥4600.00</p>
-          <a href="product_details.html" id="fix">查看详情</a>
-        </div>
-      </div>
-    </div>
+    <IndexFloor title="热销单品 /3F" :items="data.topSaleItems" />
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import IndexFloor from "../components/IndexFloor.vue";
 export default {
+  computed: {
+    ...mapState(["baseUrl"]),
+  },
   data() {
     return {
       data: null,
+      swiperOption: {
+        effect: "cube",
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+        loop: true,
+        pagination: {
+          el: ".swiper-pagination",
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      },
     };
   },
   methods: {
     getData() {
       this.axios.get("product/index.php").then(res => {
         console.log(res.data);
+        this.data = res.data;
       });
     },
+    // 鼠标进入时触发
+    stopSwiper() {
+      this.$refs.mySwiper.$swiper.autoplay.stop();
+      // console.log("鼠标进入");
+    },
+    // 鼠标离开时触发
+    startSwiper() {
+      this.$refs.mySwiper.$swiper.autoplay.start();
+      // console.log("鼠标离开");
+    },
   },
-  mounted () {
+  mounted() {
     this.getData();
-  
   },
+  components: { IndexFloor },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.swiper-container {
+  width: 1000px;
+  margin: 10px auto;
+}
+</style>
 <style scoped src="../assets/css/item_cat.css"></style>

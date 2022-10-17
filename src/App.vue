@@ -1,6 +1,7 @@
 <template>
   <div>
-   <MyHeader/>
+   <MyHeader v-show="!$route.meta.hideHeader"/>
+ 
    <router-view/>
     <MyFooter/>
   </div>

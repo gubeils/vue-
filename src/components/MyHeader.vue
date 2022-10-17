@@ -3,13 +3,13 @@
     <!-- 页面顶部-->
     <header id="top">
       <div id="logo" class="lf">
-        <a href="index.html">
+        <router-link to="/">
           <img
             class="animated jello"
             src="https://web.codeboy.com/xuezi/img/header/logo.png"
             alt="logo"
           />
-        </a>
+        </router-link>
       </div>
       <div id="top_input" class="lf">
         <input
@@ -17,6 +17,8 @@
           class="input-kw"
           type="text"
           placeholder="请输入您要搜索的内容"
+          v-model="kw"
+          @keyup.13="goto"
         />
         <div class="seek" tabindex="-1">
           <div class="actived">
@@ -31,12 +33,12 @@
             <div id="srdz">私人订制</div>
           </div>
         </div>
-        <a href="javascript:void(0)" class="rt"
+        <router-link :to="`/productList/${kw}`" class="rt"
           ><img
             id="search"
             src="https://web.codeboy.com/xuezi/img/header/search.png"
             alt="搜索"
-        /></a>
+        /></router-link>
       </div>
       <div class="rt">
         <ul class="lf">
@@ -65,11 +67,17 @@
             ><b>|</b>
           </li>
         </ul>
-        <ul class="lf login_info">
+        <ul class="lf login_info" v-if="!$store.state.uname">
           <li>
-            <a href="register.html" title="注册新用户">&nbsp;注册</a><b>|</b>
+            <router-link to="/register" title="注册新用户"
+              >&nbsp;注册</router-link
+            ><b>|</b>
           </li>
-          <li><a href="login.html" title="用户登录">登录</a></li>
+          <li><router-link to="/login" title="用户登录">登录</router-link></li>
+        </ul>
+        <ul class="lf login_info" v-else>
+          <li>&nbsp;{{ $store.state.uname }}<b>|</b></li>
+          <li><a @click="logout">退出</a></li>
         </ul>
       </div>
     </header>
@@ -85,7 +93,26 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      kw: "",
+    };
+  },
+  methods: {
+    goto() {
+      const path = `/productList/${this.kw}`;
+      if (this.$route.path === path) return;
+      this.$router.push(path);
+      this.kw = "";
+    },
+    logout() {
+      this.$store.commit("loginOut");
+      this.$router.push("/");
+    },
+    
+  },
+};
 </script>
 
 <style lang="scss" scoped></style>
